@@ -6,14 +6,14 @@ package Devel::Dumpvar;
 # but is designed to be easier to use, more accessible, and more
 # upgradable without upgrading perl itself.
 
-require 5.005;
+use 5.005;
 use strict;
 use UNIVERSAL 'isa';
 use Scalar::Util ();
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '0.01';
+	$VERSION = '0.02';
 }
 
 
@@ -81,7 +81,7 @@ sub dump {
 
 	# Set up for dumping
 	$self->{indent} = '';
-	$self->{seen} = {};
+	$self->{seen}   = {};
 	$self->{return} = '' if $self->_return;
 
 	if ( @_ ) {
@@ -142,7 +142,7 @@ sub _dump_array {
 		# Print the array line
 		$self->_print( "$self->{indent}$i  " . $self->_refstring($value) );
 
-		# Decend to the child
+		# Descend to the child
 		$self->_dump_child( $value );
 	}
 }
@@ -169,6 +169,14 @@ sub _dump_hash {
 		# Decent to the child
 		$self->_dump_child( $value );
 	}
+}
+
+sub _dump_code {
+	my $self = shift;
+	my $value = isa( $_[0], 'CODE' ) ? shift
+		: die "Bad argument to _dump_code";
+
+	$self->_print( "$self->{indent}-> Sub detail listing unsupported" );
 }
 
 sub _dump_child {
@@ -203,6 +211,8 @@ sub _dump_child {
 		$self->_dump_array( $value );
 	} elsif ( $type eq 'HASH' ) {
 		$self->_dump_hash( $value );
+	} elsif ( $type eq 'CODE' ) {
+		$self->_dump_code( $value );
 	} else {
 		die "ARRAY -> $type not supported";
 	}
@@ -251,7 +261,7 @@ sub _refstring {
 
 	my $addr  = sprintf '0x%x', Scalar::Util::refaddr($value);
 	my $type  = Scalar::Util::reftype($value);
-	unless ( $type =~ /^(?:SCALAR|ARRAY|HASH|REF)$/ ) {
+	unless ( $type =~ /^(?:SCALAR|ARRAY|HASH|REF|CODE)$/ ) {
 		return "UNSUPPORTED($addr)";
 	}
 	my $class = Scalar::Util::blessed($value);
@@ -374,15 +384,13 @@ afterwards.
 
 Bugs should be reported via the CPAN bug tracker at
 
-  http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Devel%3ADumpvar
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Devel%3ADumpvar>
 
 For other issues, contact the author
 
 =head1 AUTHORS
 
-        Adam Kennedy ( maintainer )
-        cpan@ali.as
-        http://ali.as/
+Adam Kennedy (Maintainer), L<http://ali.as/>, cpan@ali.as
 
 =head1 COPYRIGHT
 

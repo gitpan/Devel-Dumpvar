@@ -69,14 +69,12 @@ TO DO
 SUPPORT
     Bugs should be reported via the CPAN bug tracker at
 
-      http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Devel%3ADumpvar
+    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Devel%3ADumpvar>
 
     For other issues, contact the author
 
 AUTHORS
-            Adam Kennedy ( maintainer )
-            cpan@ali.as
-            http://ali.as/
+    Adam Kennedy (Maintainer), <http://ali.as/>, cpan@ali.as
 
 COPYRIGHT
     Copyright (c) 2004 Adam Kennedy. All rights reserved. This program is

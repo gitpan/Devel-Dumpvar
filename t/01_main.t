@@ -103,26 +103,26 @@ END_DUMP
 
 # A reasonably large, combination object
 my $User = bless( {
-	'HideDescriptions' => bless( do{\(my $o = 1)}, 'AppCore::Data::Boolean' ),
-	'Passwd' => bless( do{\(my $o = 'phlegm1!')}, 'AppCore::Data::ShortString' ),
-	'Id' => bless( do{\(my $o = '1')}, 'AppCore::Data::Integer' ),
+	'HideDescriptions' => bless( do{\(my $o = 1)}, 'Foo::Data::Boolean' ),
+	'Passwd' => bless( do{\(my $o = 'phlegm1!')}, 'Foo::Data::ShortString' ),
+	'Id' => bless( do{\(my $o = '1')}, 'Foo::Data::Integer' ),
 	'_ID' => '1',
-	'RealName' => bless( do{\(my $o = 'Adam Kennedy')}, 'AppCore::Data::LongString' ),
-	'OutputPath' => bless( do{\(my $o = undef)}, 'AppCore::Data::LongString' ),
-	'OutputURL' => bless( do{\(my $o = undef)}, 'AppCore::Data::LongString' ),
-	'Username' => bless( do{\(my $o = 'adam')}, 'AppCore::Data::ShortString' ),
+	'RealName' => bless( do{\(my $o = 'Adam Kennedy')}, 'Foo::Data::LongString' ),
+	'OutputPath' => bless( do{\(my $o = undef)}, 'Foo::Data::LongString' ),
+	'OutputURL' => bless( do{\(my $o = undef)}, 'Foo::Data::LongString' ),
+	'Username' => bless( do{\(my $o = 'adam')}, 'Foo::Data::ShortString' ),
 	'Created' => bless( do{\(my $o = bless( [
 		37, 32, 4, 19, 7, 103, 2, 230, 0, 1061231557, 1
-		], 'AppCore::Time' ))}, 'AppCore::Data::DateTime' ),
-	'Email' => bless( do{\(my $o = 'adam@ali.as')}, 'AppCore::Data::LongString' ),
+		], 'Foo::Time' ))}, 'Foo::Data::DateTime' ),
+	'Email' => bless( do{\(my $o = 'adam@ali.as')}, 'Foo::Data::LongString' ),
 	'Modified' => bless( do{\(my $o = bless( [
 		35, 42, 17, 18, 10, 103, 2, 321, 1, 1069137755, 1
-		], 'AppCore::Time' ))}, 'AppCore::Data::DateTime' )
-	}, 'AppCore::Entity::User' );
+		], 'Foo::Time' ))}, 'Foo::Data::DateTime' )
+	}, 'Foo::Entity::User' );
 dump_is( $Dump->dump( $User ), <<'END_DUMP', "More complex dump worked" );
-0  AppCore::Entity::User=HASH(0x9e82358)
-   'Created' => AppCore::Data::DateTime=REF(0x9e8a0d4)
-      -> AppCore::Time=ARRAY(0x9ee62c4)
+0  Foo::Entity::User=HASH(0x9e82358)
+   'Created' => Foo::Data::DateTime=REF(0x9e8a0d4)
+      -> Foo::Time=ARRAY(0x9ee62c4)
          0  37
          1  32
          2  4
@@ -134,14 +134,14 @@ dump_is( $Dump->dump( $User ), <<'END_DUMP', "More complex dump worked" );
          8  0
          9  1061231557
          10  1
-   'Email' => AppCore::Data::LongString=SCALAR(0x9e8a098)
+   'Email' => Foo::Data::LongString=SCALAR(0x9e8a098)
       -> 'adam@ali.as'
-   'HideDescriptions' => AppCore::Data::Boolean=SCALAR(0x9e8a0a4)
+   'HideDescriptions' => Foo::Data::Boolean=SCALAR(0x9e8a0a4)
       -> 1
-   'Id' => AppCore::Data::Integer=SCALAR(0x88a52c4)
+   'Id' => Foo::Data::Integer=SCALAR(0x88a52c4)
       -> 1
-   'Modified' => AppCore::Data::DateTime=REF(0x9e8c3b4)
-      -> AppCore::Time=ARRAY(0x9e8c408)
+   'Modified' => Foo::Data::DateTime=REF(0x9e8c3b4)
+      -> Foo::Time=ARRAY(0x9e8c408)
          0  35
          1  42
          2  17
@@ -153,15 +153,15 @@ dump_is( $Dump->dump( $User ), <<'END_DUMP', "More complex dump worked" );
          8  1
          9  1069137755
          10  1
-   'OutputPath' => AppCore::Data::LongString=SCALAR(0x9e89ffc)
+   'OutputPath' => Foo::Data::LongString=SCALAR(0x9e89ffc)
       -> undef
-   'OutputURL' => AppCore::Data::LongString=SCALAR(0x9e8a0b0)
+   'OutputURL' => Foo::Data::LongString=SCALAR(0x9e8a0b0)
       -> undef
-   'Passwd' => AppCore::Data::ShortString=SCALAR(0x9e8a008)
+   'Passwd' => Foo::Data::ShortString=SCALAR(0x9e8a008)
       -> 'phlegm1!'
-   'RealName' => AppCore::Data::LongString=SCALAR(0x9e89f60)
+   'RealName' => Foo::Data::LongString=SCALAR(0x9e89f60)
       -> 'Adam Kennedy'
-   'Username' => AppCore::Data::ShortString=SCALAR(0x9e89df8)
+   'Username' => Foo::Data::ShortString=SCALAR(0x9e89df8)
       -> 'adam'
    '_ID' => 1
 END_DUMP

@@ -1,4 +1,7 @@
 Revision history for Perl extension Devel::Dumpvar
 
-0.1  Thu  8 Apr 2003
+0.02  Thu Aug  5 2004
+	- Adding basic CODE support
+
+0.01  Thu Apr  8 2003
 	- Adding initial version
