@@ -1,5 +1,15 @@
 Revision history for Perl extension Devel::Dumpvar
 
+0.04  Mon 12 Nov 2007
+	- Updating to Module::Install 0.68
+	- Updating to new author tests
+    	- Remove quotes for hash keys.
+
+0.03  Thu Apr 27 2006
+	- Moving from old CVS to new SVN repository
+	- Moving installer to Module::Install 0.62
+	- Removing all uses of UNIVERSAL::isa
+
 0.02  Thu Aug  5 2004
 	- Adding basic CODE support
 

@@ -8,12 +8,12 @@ package Devel::Dumpvar;
 
 use 5.005;
 use strict;
-use UNIVERSAL 'isa';
+use UNIVERSAL    ();
 use Scalar::Util ();
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '0.02';
+	$VERSION = '0.04';
 }
 
 
@@ -99,8 +99,8 @@ sub dump {
 }
 
 sub _dump_scalar {
-	my $self = shift;
-	my $value = isa( $_[0], 'SCALAR' ) ? shift
+	my $self  = shift;
+	my $value = UNIVERSAL::isa( $_[0], 'SCALAR' ) ? shift
 		: die "Bad argument to _dump_scalar";
 
 	# Print the printable form of the scalar
@@ -108,8 +108,8 @@ sub _dump_scalar {
 }
 
 sub _dump_ref {
-	my $self = shift;
-	my $value = isa( $_[0], 'REF' ) ? ${shift()}
+	my $self  = shift;
+	my $value = UNIVERSAL::isa( $_[0], 'REF' ) ? ${shift()}
 		: die "Bad argument to _dump_array";
 
 	# Print the current line
@@ -120,8 +120,8 @@ sub _dump_ref {
 }
 
 sub _dump_array {
-	my $self = shift;
-	my $array_ref = isa( $_[0], 'ARRAY' ) ? shift
+	my $self      = shift;
+	my $array_ref = UNIVERSAL::isa( $_[0], 'ARRAY' ) ? shift
 		: die "Bad argument to _dump_array";
 
 	# Handle the null array
@@ -148,13 +148,12 @@ sub _dump_array {
 }
 
 sub _dump_hash {
-	my $self = shift;
-	my $hash_ref = isa( $_[0], 'HASH' ) ? shift
+	my $self     = shift;
+	my $hash_ref = UNIVERSAL::isa( $_[0], 'HASH' ) ? shift
 		: die "Bad argument to _dump_hash";
 
-	foreach ( sort keys %$hash_ref ) {
-		my $key   = $self->_scalar( $_ );
-		my $value = $hash_ref->{$_};
+	foreach my $key ( sort keys %$hash_ref ) {
+		my $value = $hash_ref->{$key};
 
 		# Handle scalar values
 		unless ( ref $value ) {
@@ -172,15 +171,15 @@ sub _dump_hash {
 }
 
 sub _dump_code {
-	my $self = shift;
-	my $value = isa( $_[0], 'CODE' ) ? shift
+	my $self  = shift;
+	my $value = UNIVERSAL::isa( $_[0], 'CODE' ) ? shift
 		: die "Bad argument to _dump_code";
 
 	$self->_print( "$self->{indent}-> Sub detail listing unsupported" );
 }
 
 sub _dump_child {
-	my $self = shift;
+	my $self  = shift;
 	my $value = ref $_[0] ? shift
 		: die "Bad argument to _dump_child";
 
@@ -214,7 +213,7 @@ sub _dump_child {
 	} elsif ( $type eq 'CODE' ) {
 		$self->_dump_code( $value );
 	} else {
-		die "ARRAY -> $type not supported";
+		warn "ARRAY -> $type not supported";
 	}
 
 	# Remove indent
@@ -329,18 +328,18 @@ They do this with a variety of different focuses, such as human
 readability, the ability to execute the dumped code directly, or
 to minimize the size of the dumped data.
 
-Expect for the one contained in the debugger, in the file dumpvar.pl.
-This is a readily human-readable form, highly useful for debugging,
+Excect for the one contained in the debugger, in the file dumpvar.pl.
+This is a much more human-readable form, highly useful for debugging,
 containing a lot of extra information without the burden of needing to
-be re-assembled into the original data.
+allow the dump to be re-assembled into the original data.
 
 The main downside of the dumper in the perl-debugger is that the
 dumpvar.pl script is not really a readily loadable and useable module.
 It has dedicated hooks from and to the debugger, and spans across
 multiple namespaces, including main::.
 
-Devel::Dumpvar is a pure object-orientated implementation of the
-same functionality. This makes it much more usable version to use
+Devel::Dumpvar is a pure object-orientated reimplementation of the
+same functionality. This makes it much more versatile version to use
 for dumping information to debug log files or other uses where you
 don't need to reassemble the data.
 
@@ -384,17 +383,17 @@ afterwards.
 
 Bugs should be reported via the CPAN bug tracker at
 
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Devel%3ADumpvar>
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Devel-Dumpvar>
 
-For other issues, contact the author
+For other issues, or commercial enhancement or support, contact the author.
 
 =head1 AUTHORS
 
-Adam Kennedy (Maintainer), L<http://ali.as/>, cpan@ali.as
+Adam Kennedy E<lt>adamk@cpan.orgE<gt>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2004 Adam Kennedy. All rights reserved.
+Copyright 2004 - 2006 Adam Kennedy.
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
 

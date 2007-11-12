@@ -20,20 +20,20 @@ DESCRIPTION
     the ability to execute the dumped code directly, or to minimize the size
     of the dumped data.
 
-    Expect for the one contained in the debugger, in the file dumpvar.pl.
-    This is a readily human-readable form, highly useful for debugging,
+    Excect for the one contained in the debugger, in the file dumpvar.pl.
+    This is a much more human-readable form, highly useful for debugging,
     containing a lot of extra information without the burden of needing to
-    be re-assembled into the original data.
+    allow the dump to be re-assembled into the original data.
 
     The main downside of the dumper in the perl-debugger is that the
     dumpvar.pl script is not really a readily loadable and useable module.
     It has dedicated hooks from and to the debugger, and spans across
     multiple namespaces, including main::.
 
-    Devel::Dumpvar is a pure object-orientated implementation of the same
-    functionality. This makes it much more usable version to use for dumping
-    information to debug log files or other uses where you don't need to
-    reassemble the data.
+    Devel::Dumpvar is a pure object-orientated reimplementation of the same
+    functionality. This makes it much more versatile version to use for
+    dumping information to debug log files or other uses where you don't
+    need to reassemble the data.
 
 METHODS
   new( option => value, ... )
@@ -69,17 +69,18 @@ TO DO
 SUPPORT
     Bugs should be reported via the CPAN bug tracker at
 
-    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Devel%3ADumpvar>
+    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Devel-Dumpvar>
 
-    For other issues, contact the author
+    For other issues, or commercial enhancement or support, contact the
+    author.
 
 AUTHORS
-    Adam Kennedy (Maintainer), <http://ali.as/>, cpan@ali.as
+    Adam Kennedy <adamk@cpan.org>
 
 COPYRIGHT
-    Copyright (c) 2004 Adam Kennedy. All rights reserved. This program is
-    free software; you can redistribute it and/or modify it under the same
-    terms as Perl itself.
+    Copyright 2004 - 2006 Adam Kennedy. This program is free software; you
+    can redistribute it and/or modify it under the same terms as Perl
+    itself.
 
     The full text of the license can be found in the LICENSE file included
     with this module.
