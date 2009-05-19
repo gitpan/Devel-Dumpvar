@@ -3,14 +3,14 @@ NAME
 
 SYNOPSIS
       use Devel::Dumpvar;
-  
-      # Dump something immediately to STDOUT
+      
+  # Dump something immediately to STDOUT
       Devel::Dumpvar->dump( [ 'foo' ], $bar' );
-  
-      # Create a dump handle to use repeatedly
+      
+  # Create a dump handle to use repeatedly
       my $Dump = Devel::Dumpvar->new;
-  
-      # Dump via the handler
+      
+  # Dump via the handler
       $Dump->dump( 'foo', [ 'bar' ] );
 
 DESCRIPTION
@@ -62,8 +62,8 @@ METHODS
 
 TO DO
       - Implement options currently available in other dumpers as needed.
-  
-      - Currently only supports SCALAR, REF, ARRAY, HASH and Regexp.
+      
+  - Currently only supports SCALAR, REF, ARRAY, HASH and Regexp.
         Add support for all possible reference types.
 
 SUPPORT
@@ -78,9 +78,10 @@ AUTHORS
     Adam Kennedy <adamk@cpan.org>
 
 COPYRIGHT
-    Copyright 2004 - 2006 Adam Kennedy. This program is free software; you
-    can redistribute it and/or modify it under the same terms as Perl
-    itself.
+    Copyright 2004 - 2009 Adam Kennedy.
+
+    This program is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
 
     The full text of the license can be found in the LICENSE file included
     with this module.

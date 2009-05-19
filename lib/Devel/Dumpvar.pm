@@ -6,14 +6,13 @@ package Devel::Dumpvar;
 # but is designed to be easier to use, more accessible, and more
 # upgradable without upgrading perl itself.
 
-use 5.005;
+use 5.006;
 use strict;
-use UNIVERSAL    ();
-use Scalar::Util ();
+use Scalar::Util 1.18 ();
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '0.04';
+	$VERSION = '1.05';
 }
 
 
@@ -24,7 +23,7 @@ BEGIN {
 # Constructor and Accessors
 
 sub new {
-	my $class = ref $_[0] ? shift : shift;
+	my $class   = shift;
 	my %options = @_;
 
 	# Create the basic object
@@ -53,7 +52,7 @@ sub to {
 	}
 
 	# Is it something we can print to
-	if ( ref $to and UNIVERSAL::can( $to, 'print' ) ) {
+	if ( Scalar::Util::blessed($to) and $to->can('print') ) {
 		$self->{to} = $to;
 		return 1;
 	}
@@ -100,8 +99,7 @@ sub dump {
 
 sub _dump_scalar {
 	my $self  = shift;
-	my $value = UNIVERSAL::isa( $_[0], 'SCALAR' ) ? shift
-		: die "Bad argument to _dump_scalar";
+	my $value = shift;
 
 	# Print the printable form of the scalar
 	$self->_print( "$self->{indent}-> " . $self->_scalar($$value) );
@@ -109,8 +107,7 @@ sub _dump_scalar {
 
 sub _dump_ref {
 	my $self  = shift;
-	my $value = UNIVERSAL::isa( $_[0], 'REF' ) ? ${shift()}
-		: die "Bad argument to _dump_array";
+	my $value = ${shift()};
 
 	# Print the current line
 	$self->_print( "$self->{indent}-> " . $self->_refstring($value) );
@@ -121,8 +118,7 @@ sub _dump_ref {
 
 sub _dump_array {
 	my $self      = shift;
-	my $array_ref = UNIVERSAL::isa( $_[0], 'ARRAY' ) ? shift
-		: die "Bad argument to _dump_array";
+	my $array_ref = shift;
 
 	# Handle the null array
 	unless ( @$array_ref ) {
@@ -149,8 +145,7 @@ sub _dump_array {
 
 sub _dump_hash {
 	my $self     = shift;
-	my $hash_ref = UNIVERSAL::isa( $_[0], 'HASH' ) ? shift
-		: die "Bad argument to _dump_hash";
+	my $hash_ref = shift;
 
 	foreach my $key ( sort keys %$hash_ref ) {
 		my $value = $hash_ref->{$key};
@@ -172,9 +167,6 @@ sub _dump_hash {
 
 sub _dump_code {
 	my $self  = shift;
-	my $value = UNIVERSAL::isa( $_[0], 'CODE' ) ? shift
-		: die "Bad argument to _dump_code";
-
 	$self->_print( "$self->{indent}-> Sub detail listing unsupported" );
 }
 
@@ -230,22 +222,65 @@ sub _dump_child {
 # Get the display string for a scalar value
 sub _scalar {
 	my $self = shift;
-	my $value = shift;
+	my $v    = shift;
 
 	# Shortcuts
-	return 'undef' unless defined $value;
-	return "''" unless length $value;
+	return 'undef' unless defined $v;
+	return "''"    unless length  $v;
 
 	# Is it a number?
-	if ( Scalar::Util::looks_like_number( $value ) ) {
+	if ( Scalar::Util::looks_like_number($v) ) {
 		# Show as-is
-		return $value;
+		return $v;
 	}
 
-	# Escape the scalar
-	### FINISH THIS
+	# Auto-detect the tick to use
+	my $tick = "'";
+	if ( ord('A') == 193 ) {
+		if ( $v =~ /[\000-\011]/ or $v =~ /[\013-\024\31-\037\177]/ ) {
+			$tick = '"';
+		} else {
+			$tick = "'";
+		}
+	} else {
+		if ( $v =~ /[\000-\011\013-\037\177]/ ) {
+			$tick = '"';
+		} else {
+			$tick = "'";
+		}
+	}
 
-	"'" . $value . "'";
+	# Tick-specific escaping
+	if ( $tick eq "'" ) {
+		$v =~ s/([\'\\])/\\$1/g;
+	} else {
+		$v =~ s/([\"\\\$\@])/\\$1/g;
+		$v =~ s/\033/\\e/g;
+		if ( ord('A') == 193 ) { # EBCDIC.
+			$v =~ s/([\000-\037\177])/'\\c'.chr(193)/eg; # Unfinished.
+		} else {
+			$v =~ s/([\000-\037\177])/'\\c'._scalar_ord($1)/eg;
+		}
+	}
+
+	# Unicode and high-bit escaping
+	$v = _scalar_unicode($v);
+	$v =~ s/([\200-\377])/'\\'.sprintf('%3o',ord($1))/eg;
+
+	return "${tick}${v}${tick}";
+}
+
+sub _scalar_ord {
+	my $chr = shift;
+	$chr = chr(ord($chr)^64);
+	$chr =~ s{\\}{\\\\}g;
+	return $chr;
+}
+
+sub _scalar_unicode {
+	join( "",
+	map { $_ > 255 ? sprintf("\\x{%04X}", $_) : chr($_) }
+	unpack("U*", $_[0]));
 }
 
 sub _refstring {
@@ -280,7 +315,7 @@ sub _print {
 		# Handle the "return data" case
 		$self->{return} .= $line;
 
-	} elsif ( UNIVERSAL::can( $self->{to}, 'print' ) ) {
+	} elsif ( Scalar::Util::blessed($self->{to}) and $self->{to}->can('print') ) {
 		# If we have a we something we can print to, do so
 		$self->{to}->print( $line );
 
@@ -393,7 +428,8 @@ Adam Kennedy E<lt>adamk@cpan.orgE<gt>
 
 =head1 COPYRIGHT
 
-Copyright 2004 - 2006 Adam Kennedy.
+Copyright 2004 - 2009 Adam Kennedy.
+
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
 
